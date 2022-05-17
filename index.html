@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/vue@3"></script>
+    <!--Elemento raiz de montaje-->
+    <div id="app">{{ message }}</div>
+    <!--Todo lo que se derive del elemento raiz, se vuelve manipulable
+    por vue, por lo tanto se puede usar Javascript en este caso
+    una expresion-->
+    <script>
+      // Importamos la funcion que crea la aplicacion  
+      const { createApp } = Vue;
+      // Crea la aplicacion  
+      createApp({
+        // Establece las propiedades de la app  
+        data() {
+          return {
+            message: "Hello Vue!",
+          };
+        },
+        // Se monta la aplicacion en el elemento raiz
+      }).mount("#app");
+    </script>
+  </body>
+</html>
