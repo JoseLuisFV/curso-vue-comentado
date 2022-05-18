@@ -8,24 +8,45 @@
   </head>
   <body>
     <script src="https://unpkg.com/vue@3"></script>
-    <!--Elemento raiz de montaje-->
     <div id="app">{{ message }}</div>
-    <!--Todo lo que se derive del elemento raiz, se vuelve manipulable
-    por vue, por lo tanto se puede usar Javascript en este caso
-    una expresion-->
-    <script>
-      // Importamos la funcion que crea la aplicacion  
-      const { createApp } = Vue;
-      // Crea la aplicacion  
-      createApp({
-        // Establece las propiedades de la app  
+    <script>  
+      const { createApp } = Vue; 
+      // Guardamos nuestra app en una constante para tener acceso a ella
+      // de modo que nos permita hacer modificaciones externas si asi lo queremos
+      const vm =createApp({
         data() {
           return {
-            message: "Hello Vue!",
+            message: "me gusta leer!",
+            otherMessage: "Este contenido se visualiza mediante la directiva v-text",
+            saludo: "Buenas tardes",
+            codigoHTML: "<p>Me veo bien porque se aplico la directiva v-html</p>",
+            otroCodigoHTML: "<p>yo no me veo bien porque no tengo la directiva v-html</p>"
           };
         },
-        // Se monta la aplicacion en el elemento raiz
+        // opcion template, que es una propiedad que contiene 
+        // los componentes que simulan el html, asi como los
+        // componentes que creemos
+        template: `
+            <!--Todos lo dentro del template
+                puede usar directivas de vue asi como 
+                las expresiones-->
+            <h1> Hola soy Jose Luis Flores y {{ message }} </h1>
+            <!--La diretiva v-text es una que inserta como contenido al componente
+                importante decirn que su contenido sea expresiones javascript-->
+            <h2 v-text="otherMessage"></h2>
+            <!--Esta directiva v-once provoca que no se puedan realizar cambios-->
+            <h2 v-once>{{ saludo }}</h2>
+            <h2 v-text="saludo"></h2>
+            <!--Esta directiva permite que se reconosca el contenido como codigo html-->
+            <div v-html="codigoHTML"></div>
+            <div>{{ otroCodigoHTML }}</div>
+
+        `,
       }).mount("#app");
+
+      // En esa linea se cambia la propiedad saludo que se encuentra en data,
+      vm.saludo = "Buenas noches"
+      // Util para ejemplifica v-once
     </script>
   </body>
 </html>
