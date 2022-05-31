@@ -10,13 +10,7 @@
   <body>
     <script src="https://unpkg.com/vue@3"></script>
     <div id="app" class="app">
-      <!--Los atributos reactivos ayudan en la funcionalidad de resderizacon,
-      pues cuando se realizan aplicaciones se eera que exista cierto dinamismo,
-      asi que los atributos pueden tener diferentes valores, para ello vue, tiene algo llamado v-bind, que es la directiva para volver dinamicos esos atributos, que conocemos ya del html puro-->
-      <img v-bind:src="urlImg" v-bind:alt="descriptionImg" />
-      <!--Aunque utilizar v-bind, dandole el atributo que sera reactivo, tambien puedes hacer que dicho atributo que sera reactivo no se defina de un inicio, con lo cual puedes utilizar una varaible que pueda esperar multiples atributos-->
-      <img v-once v-bind:[attr]="urlImg" />
-      <img v-bind:[attr]="urlImg" />
+      
     </div>
     <script>  
       const { createApp } = Vue; 
@@ -24,14 +18,41 @@
       const vm = createApp({
         data() {
           return {
-            message: "Hola Vue",
-            urlImg: "https://joseluisfv.github.io/assets/img/jose-luis-fv-logo.png",
-            descriptionImg: "Logo de Jose Luis Flores Vacio",
-            attr: "src",
+            counter: 0,
           };
         },
+        template: `
+          <!--Para poder hacer uso o escuchar los eventos necesitas la directiva
+            v-on, la cual se le tiene que indicar que evento va a estar eschando, a la vez necesitas indicar que metodo se va a disparar cuando dicho evento suceda-->
+          <button v-on:click="addOneToCounter"> {{ counter }} </button>
+          <!--Los eventos que acepta v-on son todos los que vanilla js ya tiene, pero tambien permite escuchar los eventos creados por nosotros mismos-->
+
+          <!--Sabemos que los eventos no solo son escuchados, pues traen consigo cosas que suceden ademas del metodo que nosotros asignamos que disparen, uno clasico es el submit de los formularios
+            
+          El cual hace que automaticamente recargue el navegador, para evitar eso en js teniamos que capturar el evento, y hacer que se ejecute el metodo preventDefault
+          
+          De esta manera evitamos que el evento tambien dispare sus compotamiento que tiene por defecto
+          
+          En vue a ese tipo de metodos que tiene el evento, se le llaman modificadores, que pueden indicarse con la notacion de punto-->
+          <form v-on:submit.prevent="submit">
+            <button>submit</button>
+          </form>
+          <!--La directiva v-on tambien acepta eventos varoiables, como en el caso de  v-bind-->
+        `, 
+        methods: {
+          // Todos los metodos que un componente necesita utilizar, se necesitan declarar en el la propiedad methods del componente
+          addOneToCounter() {
+            console.log('Acabas de dar un click');
+            // Para hacer uso de las variables o atributos declarados en la propiedad data, necesitas utilizar la palabra reservada this, que referencia al componente mismo
+            this.counter++
+          },
+          submit(){
+            console.log("No se recargo la pagina");
+          }
+        }
+
       }).mount("#app");
-      vm.attr="alt"
+      
     </script>
   </body>
 </html>
