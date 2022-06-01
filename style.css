@@ -1,3 +1,10 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 .app {
     display: block;
     margin-left: auto;
@@ -30,6 +37,11 @@ img {
     border-radius: 4px;
     border: none;
     background-color: peru;
+}
+
+.counter__button--minus:active,
+.counter__button--add:active {
+    background-color: chocolate;
 }
 
 .counter__label {
