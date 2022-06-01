@@ -18,47 +18,36 @@
       const vm = createApp({
         data() {
           return {
-            text: 'Hola Vue!',
-            anotherText: 'Hola node!'
+            firstName: 'Jose',
+            lastName: 'Flores',
+            now: new Date(),
           };
         },
         template: `
           <!--
-            Los datos en la aplicacion cambian, por el usario
-            cuando eso sucede normalmente se espera que ocurra algo,
-            ese reflejo se da mediante acciones o eventos, sin embargo
-            realizar una accion como darle click a un boton, para que
-            ello desenboque en otros cambios no siempre es lo mejor,
-            pues hay ocasione que se necesita ser mas reactivo,
-            para ello puedes utilizar la combinacion de v-on y v-bind,
+            Es comun que trabajar con los datos, produce cambios procesos,
+            los cuales pueden afectar a estos, sin embargo lo 
+            deseable, es que no sufran alteraciones, por si necesitamos
+            volver a utilizar.
 
-            donde el v-on ejecuta el metodos que realizara un cambio,
-            a una variable de data, sin embargo ese enlace no es inicial,
-            si no que se da despues de una interaccion, con v-bind, puedes
-            vincular la variable de data con el atributo, dinamico que tendra
-            como valor dicha variable
+            Para esto vue tiene las propiedades computadas que ayudan
+            a crear representaciones de estos datos que van de frente al
+            usuario, que  necesitan una forma presentable y entendible, 
+            esto mismo se puede hacer con javascript, pero a la larga
+            seria muy molesto el mantenimiento.
             -->
-          <input 
-            type="text" 
-            @input="cambiarText"
-            :value="text"></input>
-          <p>{{ text }}</p>
-
-          <!--
-            Esta bien esta manera de resolver esta problematica, lo unico malo
-            es que se vuelve repetitivo, y genera muchas lineas, por ello
-            vue ofrece la directiva v-model, que ademas de realizar esto mismo,
-            no necesita de un metodo que de encargue manejar este cambio
-            en el contenido de las variables.
-            -->
-          <input 
-            type="text" 
-            v-model="anotherText"></input>
-          <p>{{ anotherText }}</p>
+          <div>{{ fullName }}</div>
+          <div>{{ today }}</div>
         `, 
         methods: {
-          cambiarText(e) {
-            this.text = e.target.value;
+         
+        },
+        computed: {
+          fullName() {
+            return `${this.firstName} ${this.lastName}`
+          },
+          today() {
+            return this.now.toLocaleDateString();
           }
         }
       }).mount("#app");
