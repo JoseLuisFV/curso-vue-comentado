@@ -23,12 +23,34 @@
           };
         },
         template: `
+          <!--
+            Los datos en la aplicacion cambian, por el usario
+            cuando eso sucede normalmente se espera que ocurra algo,
+            ese reflejo se da mediante acciones o eventos, sin embargo
+            realizar una accion como darle click a un boton, para que
+            ello desenboque en otros cambios no siempre es lo mejor,
+            pues hay ocasione que se necesita ser mas reactivo,
+            para ello puedes utilizar la combinacion de v-on y v-bind,
+
+            donde el v-on ejecuta el metodos que realizara un cambio,
+            a una variable de data, sin embargo ese enlace no es inicial,
+            si no que se da despues de una interaccion, con v-bind, puedes
+            vincular la variable de data con el atributo, dinamico que tendra
+            como valor dicha variable
+            -->
           <input 
             type="text" 
             @input="cambiarText"
             :value="text"></input>
           <p>{{ text }}</p>
 
+          <!--
+            Esta bien esta manera de resolver esta problematica, lo unico malo
+            es que se vuelve repetitivo, y genera muchas lineas, por ello
+            vue ofrece la directiva v-model, que ademas de realizar esto mismo,
+            no necesita de un metodo que de encargue manejar este cambio
+            en el contenido de las variables.
+            -->
           <input 
             type="text" 
             v-model="anotherText"></input>
