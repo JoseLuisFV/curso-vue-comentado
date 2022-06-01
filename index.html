@@ -18,25 +18,27 @@
       const vm = createApp({
         data() {
           return {
-            counter: 0,
+            text: 'Hola Vue!',
+            anotherText: 'Hola node!'
           };
         },
         template: `
-          <article class="counter">
-            <button class="counter__button--add" v-on:click="increment">+</button>
-            <span class="counter__label">{{ counter }}</span>
-            <button class="counter__button--minus" v-on:click="decrement">-</button>
-          </article>
+          <input 
+            type="text" 
+            @input="cambiarText"
+            :value="text"></input>
+          <p>{{ text }}</p>
+
+          <input 
+            type="text" 
+            v-model="anotherText"></input>
+          <p>{{ anotherText }}</p>
         `, 
         methods: {
-          increment() {
-            this.counter++
-          },
-          decrement() {
-            this.counter--
+          cambiarText(e) {
+            this.text = e.target.value;
           }
         }
-
       }).mount("#app");
       
     </script>
