@@ -18,36 +18,33 @@
       const vm = createApp({
         data() {
           return {
-            firstName: 'Jose',
-            lastName: 'Flores',
-            now: new Date(),
+            text: 'Hola Vue!'
           };
         },
         template: `
-          <!--
-            Es comun que trabajar con los datos, produce cambios procesos,
-            los cuales pueden afectar a estos, sin embargo lo 
-            deseable, es que no sufran alteraciones, por si necesitamos
-            volver a utilizar.
-
-            Para esto vue tiene las propiedades computadas que ayudan
-            a crear representaciones de estos datos que van de frente al
-            usuario, que  necesitan una forma presentable y entendible, 
-            esto mismo se puede hacer con javascript, pero a la larga
-            seria muy molesto el mantenimiento.
-            -->
-          <div>{{ fullName }}</div>
-          <div>{{ today }}</div>
+          <input v-model="text" />
+          <p>{{ text }}</p>
         `, 
-        methods: {
-         
-        },
-        computed: {
-          fullName() {
-            return `${this.firstName} ${this.lastName}`
-          },
-          today() {
-            return this.now.toLocaleDateString();
+        // Los eventos disparan funciones, asi como cualquier cambia de un dato
+        // puede ocasionar cambio en una propiedad computada, y los input, tambien 
+        // generan cambios de las variables.
+
+        // Todos los casos anteriores disparaban acciones muy visibles para el usuario
+        // o sino almenos el usuario era consciente que algo estaba pasando, pero aun existe
+        // otros casos.
+
+        // Los watcher son metodos que seran disparados cuando una variable, de data sufra
+        // cambios, y el nombre de cada uno de estos metodos es similar sino es que igual
+        // al nombre de dicha variable.
+
+        // Lo recomendable es mantener el codigo o la logica del proceso que se dispare del
+        // watch lo mas sencillo posible, en caso de que sea algo mas complicado, puedes
+        // crear metodos que sean llamados en este, y necesitas la palabra reservada this
+        watch: {
+          text(value, old) {
+            console.log("Watcher!");
+            console.log(old);
+            console.log(value);
           }
         }
       }).mount("#app");
