@@ -18,33 +18,66 @@
       const vm = createApp({
         data() {
           return {
-            text: 'Hola Vue!'
+            isOpen: false,
+            width: 200,
+            height: 130,
+            styles: {
+              width: '200px',
+              height: '130px',
+              textAlign: 'center',
+              lineHeight: '130px'
+            },
+            message: "Abrir"
           };
         },
         template: `
-          <input v-model="text" />
-          <p>{{ text }}</p>
+          <div>
+            <div 
+            <!--Estilos dinamicos, a veces se quiere cierto dinamismo en
+              la ui que ayude a indicar o a que el usaurio tenga presente 
+              que paso algo, o para dar un dinamismo estico, en esos casos
+              vue tiene en cuenta una manera de lidear con los estilos.
+              
+              Se tienen dos casos donde se implica el v-bind, pues como
+              recordamos vuelve reactivo a los atributos que se le indican
+
+              En el caso del atributo class, hay dos maneras de asignar clases
+               1. La primera es con un array que contendra las clases que se aplicaran
+               2. La seguna es indicarle un json, que se contiene las clases como
+               atributos y el valor de las clases son una expresion que al final
+               dicha expresion tiene que devolver un true o un false.
+
+               El otro caso es volver reactivo el atributo style, el cual contiene
+               otro json, pero este tiene propiedades css y los valores de 
+               las propiedades tambien son de css, es muy parecido a cuando
+               escribes css
+              -->
+              :class="{red: !isOpen, green: isOpen, default: true}"
+              :style="styles"
+              > {{ dimmensions }} </div>
+            <button @click="isOpen = !isOpen">{{ message }}</button>
+            <div>
+              <input type="number" id="width" v-model="width" />
+              <input type="number" id="height" v-model="height" />
+            </div>
+          </div>
+          
         `, 
-        // Los eventos disparan funciones, asi como cualquier cambia de un dato
-        // puede ocasionar cambio en una propiedad computada, y los input, tambien 
-        // generan cambios de las variables.
-
-        // Todos los casos anteriores disparaban acciones muy visibles para el usuario
-        // o sino almenos el usuario era consciente que algo estaba pasando, pero aun existe
-        // otros casos.
-
-        // Los watcher son metodos que seran disparados cuando una variable, de data sufra
-        // cambios, y el nombre de cada uno de estos metodos es similar sino es que igual
-        // al nombre de dicha variable.
-
-        // Lo recomendable es mantener el codigo o la logica del proceso que se dispare del
-        // watch lo mas sencillo posible, en caso de que sea algo mas complicado, puedes
-        // crear metodos que sean llamados en este, y necesitas la palabra reservada this
         watch: {
-          text(value, old) {
-            console.log("Watcher!");
-            console.log(old);
-            console.log(value);
+          isOpen(value) {
+            this.message = value ? 'Cerrar' : 'Abrir'
+          },
+          height(value) {
+            this.styles.height = value + 'px'
+            this.styles.lineHeight = value + 'px'
+          },
+          width(value) {
+            this.styles.width = value + 'px'
+          }
+        },
+        computed: {
+          dimmensions() {
+            return `${this.styles.width} x ${this.styles.height}`
           }
         }
       }).mount("#app");

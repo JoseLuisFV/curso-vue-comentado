@@ -17,35 +17,16 @@ img {
     height: auto;
 }
 
-.counter {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(100px, 1fr));
-    justify-items: stretch;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 420px;
-    gap: 14px;
+
+
+.default {
+    border-radius: 50%;
 }
 
-.counter__label,
-.counter__button--minus,
-.counter__button--add {
-    height: 60px;
-    font-size: 30px;
-    text-align: center;
-    border-radius: 4px;
-    border: none;
-    background-color: peru;
+.red {
+    background-color: red;
 }
 
-.counter__button--minus:active,
-.counter__button--add:active {
-    background-color: chocolate;
-}
-
-.counter__label {
-    background-color: coral;
-    padding: 0;
-    line-height: 60px;
+.green {
+    background-color: green;
 }
