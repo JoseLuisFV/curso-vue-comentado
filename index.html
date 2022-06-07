@@ -17,8 +17,30 @@
         data() {
           return {
             isOpen: false,
-            text: "La puerta esta cerrada",
-            userName: 'example',
+            text: "Abrir sesión",
+            userName: '',
+            posts: [
+              {
+                title: "Un titulo chido", 
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+              },
+              {
+                title: "Un titulo chido", 
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+              },
+              {
+                title: "Un titulo chido", 
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+              },
+              {
+                title: "Un titulo chido", 
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+              },
+              {
+                title: "Un titulo chido", 
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+              },
+            ]
           };
         },
         template: `
@@ -37,25 +59,41 @@
             -->
             <div v-if="isOpen">
               <p>Hola, {{ userName }}</p>
+              <ul class="list">
+                <li v-for="(item, index) in posts" :key="index"  class="item">
+                  <h4 class="title">{{ item.title }}</h4>
+                  <p>{{ item.description }}</p>
+                </li>  
+              </ul>
             </div>
             <div v-else>
-              <label>Username: </label>
+              <div>Username: </div>
               <input v-model="userName" />
             </div>
-            <button @click="isOpen = !isOpen">
+            <button @click="openAndCloseSession">
               <div v-if="!isOpen" >Acceder</div>
               <div v-else>Salir</div>
             </button>
           </div>
           
-        `, 
+        `,
+        methods: {
+          openAndCloseSession() {
+            if (this.userName.length > 0 && this.isOpen == false) {
+              this.isOpen = true;
+            } else if(this.isOpen) {
+              this.isOpen = false;
+            }
+          }
+        },
         watch: {
           isOpen(value) {
             if(!value){
               this.text = 'Accede a tu cuenta'
               this.userName = ''
+            } else {
+              this.text = "Cierra sesión";
             }
-            this.text = "Cierra sesión";
           },
         },
       }).mount("#app");

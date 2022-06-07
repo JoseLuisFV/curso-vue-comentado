@@ -17,10 +17,10 @@ body, html {
     flex-direction: column;
     width: 100%;
     height: 100%;
+    gap: 30px
 }
 
 button {
-    margin-top: 24px;
     border: none;
     background-color: whitesmoke;
     padding: 8px 24px;
@@ -33,4 +33,20 @@ button {
 
 .open {
     background-color: #B5E7A0;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.item {
+    border: 1px solid #e5e5e54d;
+    list-style: none;
+}
+
+.title {
+    font-family: bold;
+    font-size: 1.2rem;
 }
