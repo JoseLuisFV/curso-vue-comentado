@@ -9,9 +9,7 @@
   </head>
   <body>
     <script src="https://unpkg.com/vue@3"></script>
-    <div id="app" class="app">
-      
-    </div>
+    <div id="app" class="app"></div>
     <script>  
       const { createApp } = Vue; 
       
@@ -19,67 +17,47 @@
         data() {
           return {
             isOpen: false,
-            width: 200,
-            height: 130,
-            styles: {
-              width: '200px',
-              height: '130px',
-              textAlign: 'center',
-              lineHeight: '130px'
-            },
-            message: "Abrir"
+            text: "La puerta esta cerrada",
+            userName: 'example',
           };
         },
         template: `
-          <div>
-            <div 
-            <!--Estilos dinamicos, a veces se quiere cierto dinamismo en
-              la ui que ayude a indicar o a que el usaurio tenga presente 
-              que paso algo, o para dar un dinamismo estico, en esos casos
-              vue tiene en cuenta una manera de lidear con los estilos.
-              
-              Se tienen dos casos donde se implica el v-bind, pues como
-              recordamos vuelve reactivo a los atributos que se le indican
-
-              En el caso del atributo class, hay dos maneras de asignar clases
-               1. La primera es con un array que contendra las clases que se aplicaran
-               2. La seguna es indicarle un json, que se contiene las clases como
-               atributos y el valor de las clases son una expresion que al final
-               dicha expresion tiene que devolver un true o un false.
-
-               El otro caso es volver reactivo el atributo style, el cual contiene
-               otro json, pero este tiene propiedades css y los valores de 
-               las propiedades tambien son de css, es muy parecido a cuando
-               escribes css
-              -->
-              :class="{red: !isOpen, green: isOpen, default: true}"
-              :style="styles"
-              > {{ dimmensions }} </div>
-            <button @click="isOpen = !isOpen">{{ message }}</button>
-            <div>
-              <input type="number" id="width" v-model="width" />
-              <input type="number" id="height" v-model="height" />
+          <div class="container" :class="{
+              'open': isOpen,
+              'close': !isOpen
+            }">
+            <h2>{{ text }}</h2>
+            <!--
+              Mostrar contenido dependiendo el estado de la app
+              es importante, y manejar el contenido con js puede resultar
+              complicado cuando dicho contenido es lo suficientemente grande
+              para ser considerado un componente, para ello vue ofrece las
+              condicionales if-else, para llevar a cabo dicha tarea a nivel template
+              que es donde colocamos los componentes o elementos.
+            -->
+            <div v-if="isOpen">
+              <p>Hola, {{ userName }}</p>
             </div>
+            <div v-else>
+              <label>Username: </label>
+              <input v-model="userName" />
+            </div>
+            <button @click="isOpen = !isOpen">
+              <div v-if="!isOpen" >Acceder</div>
+              <div v-else>Salir</div>
+            </button>
           </div>
           
         `, 
         watch: {
           isOpen(value) {
-            this.message = value ? 'Cerrar' : 'Abrir'
+            if(!value){
+              this.text = 'Accede a tu cuenta'
+              this.userName = ''
+            }
+            this.text = "Cierra sesión";
           },
-          height(value) {
-            this.styles.height = value + 'px'
-            this.styles.lineHeight = value + 'px'
-          },
-          width(value) {
-            this.styles.width = value + 'px'
-          }
         },
-        computed: {
-          dimmensions() {
-            return `${this.styles.width} x ${this.styles.height}`
-          }
-        }
       }).mount("#app");
       
     </script>
