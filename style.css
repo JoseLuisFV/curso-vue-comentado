@@ -4,27 +4,124 @@
     box-sizing: border-box;
 }
 
+html {
+    font-size: 62.5%;
+}
+
 body, html {
     height: 100vh;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.container, .app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
+
+.app {
+    position:relative;
     height: 100%;
-    gap: 30px
+    min-width: 320px;
+    width: 100%;
+}
+
+.message {
+    position: absolute;
+    left: calc(100% - 260px);
+    top: 100px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 260px;
+    padding: 6px 12px;
+    font-size: 1.4rem;
+    background-color: azure;
+    border-right: 6px solid #ECA1A6;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.message__button {
+    display: block;
+    min-width: 36px;
+    height: 36px;
+    border:3px solid lightslategrey;
+    border-radius: 50%;
+    background-image: url(./cancel.png);
+    background-size: 16px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.header {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 0;
+    margin-bottom: auto;
+    text-align: center;
+}
+
+.header__title {
+    text-align: center;
+    font-size: 3.0rem;
+}
+
+.login {
+    position: absolute;
+    top: calc(50% - 170px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-height: 340px;
+    max-width: 600px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #192c2d;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.login__title {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #33ff99;
+}
+
+.login__label {
+    margin-bottom: 8px;
+    font-size: 1.6rem;
+    color: #5ef9ac;
+    font-weight: lighter;
+}
+
+.login__input {
+    margin-bottom: 16px;
+    padding: 5px 8px;
+    font-size: 1.6rem;
+    border-radius: 4px;
+}
+
+.posts {
+    margin-top: 0px;
+    margin-bottom: auto;
 }
 
 button {
     border: none;
     background-color: whitesmoke;
     padding: 8px 24px;
+    font-size: 1.6rem;
     border-radius: 12px;
+    cursor: pointer;
+}
+
+input, textarea {
+    cursor: pointer;
 }
 
 .close {
@@ -35,18 +132,71 @@ button {
     background-color: #B5E7A0;
 }
 
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.posts {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
 }
 
-.item {
-    border: 1px solid #e5e5e54d;
+.posts__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.posts__item {
+    padding: 10px;
+    border: 1px solid #a1a1a14d;
+    border-radius: 5px;
     list-style: none;
 }
 
-.title {
-    font-family: bold;
-    font-size: 1.2rem;
+.posts__title {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 2.0rem;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.posts__description {
+    font-size: 1.6rem;
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.post__label {
+    font-size: 1.9rem;
+}
+
+.post__title {
+    margin-bottom: 16px;
+    padding: 15px 10px;
+    font-size: 1.7rem;
+    border: none;
+}
+
+.post__title::placeholder {
+    font-size: 2.0rem;
+    
+}
+
+.post__description {
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 1.7rem;
+    border: none;
+    resize: none;
+}
+
+.post__description::placeholder {
+    font-size: 2.0rem;
+    border-radius: 5px;
+}
+
+.post__button {
+    align-self: flex-end;
 }

@@ -19,6 +19,7 @@
             isOpen: false,
             text: "Abrir sesión",
             userName: '',
+            password: '',
             posts: [
               {
                 title: "Un titulo chido", 
@@ -40,50 +41,108 @@
                 title: "Un titulo chido", 
                 description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
               },
-            ]
+            ],
+            titlePost: '',
+            descriptionPost: '',
+            message: '',
+            letKnowUser: false,
           };
         },
         template: `
-          <div class="container" :class="{
-              'open': isOpen,
-              'close': !isOpen
-            }">
-            <h2>{{ text }}</h2>
-            <!--
-              Mostrar contenido dependiendo el estado de la app
-              es importante, y manejar el contenido con js puede resultar
-              complicado cuando dicho contenido es lo suficientemente grande
-              para ser considerado un componente, para ello vue ofrece las
-              condicionales if-else, para llevar a cabo dicha tarea a nivel template
-              que es donde colocamos los componentes o elementos.
-            -->
-            <div v-if="isOpen">
-              <p>Hola, {{ userName }}</p>
-              <ul class="list">
-                <li v-for="(item, index) in posts" :key="index"  class="item">
-                  <h4 class="title">{{ item.title }}</h4>
-                  <p>{{ item.description }}</p>
-                </li>  
-              </ul>
-            </div>
-            <div v-else>
-              <div>Username: </div>
-              <input v-model="userName" />
-            </div>
-            <button @click="openAndCloseSession">
-              <div v-if="!isOpen" >Acceder</div>
-              <div v-else>Salir</div>
-            </button>
+          <header class="header">
+            <h1 class="header__title">Another social website</h1>
+          </header>
+          <section v-if="!isOpen" class="login">
+            <h2 class="login__title">Login</h2>
+            <div class="login__label">username:</div>
+            <input v-model="userName" class="login__input" />
+            <div class="login__label">password:</div>
+            <input type="password" v-model="password" class="login__input" />
+            <button @click="logIn">Inicia Sesión</button>
+          </section>
+          <section class="posts" v-else>
+            <h2 class="posts__title">Posts</h2>
+            <article class="post">
+              <div class="post__label">Titulo del post</div>
+              <input 
+                class="post__title"
+                placeholder="Escribe un gran titulo"
+                v-model="titlePost"
+                />
+              <div class="post__label">Contenido</div>
+              <textarea 
+                class="post__description" 
+                rows="4" 
+                cols="42" 
+                placeholder="Cuentanos que pasa por tu mente"
+                v-model="descriptionPost"
+                />
+              <button 
+                class="post__button"
+                @click="addPost">
+                  Agrega post
+                </button>
+            </article>
+            <ul class="posts__list"
+              >
+              <li 
+                v-for="(item, index) in posts" 
+                :key="index"  
+                class="posts__item">
+                  <h4 class="posts__title">{{ item.title }}</h4>
+                  <p class="posts__description">{{ item.description }}</p>
+                  <button @click="deletePost(index)">Borrar post</button>
+              </li>
+            </ul>
+          </section>
+          <div v-if="letKnowUser" class="message">
+            <div class="message__text">{{ message }}</div>
+            <div class="message__button" @click="closeMessage"></div>
           </div>
-          
         `,
         methods: {
-          openAndCloseSession() {
-            if (this.userName.length > 0 && this.isOpen == false) {
-              this.isOpen = true;
-            } else if(this.isOpen) {
-              this.isOpen = false;
+          logIn() {
+            const fields = [
+              this.userName,
+              this.password
+            ]
+            if(!this.isOpen && this.checkEmptyFields(fields)) {
+              this.isOpen = !this.isOpen;
+              this.closeMessage();
+            } else {
+              this.letKnowUser = true;
+              this.message = "Necesitas ingresar usuario y contraseña para poder iniciar sesion"
             }
+          },
+          logOut() {
+
+          },
+          addPost() {
+            const fields = [
+              this.titlePost,
+              this.descriptionPost
+            ];
+            if (this.checkEmptyFields(fields)) {
+              this.posts.unshift({
+                title: this.titlePost,
+                description: this.descriptionPost
+              });
+              this.titlePost = '';
+              this.descriptionPost = ''
+            } else {
+              this.letKnowUser = true;
+              this.message = "Necesitas poner un titulo y contenido para crear el post"
+            }
+          },
+          deletePost(index) {
+            this.posts.splice(index, 1);
+          },
+          closeMessage() {
+            this.letKnowUser = false;
+            this.message = '';
+          },
+          checkEmptyFields(fields) {
+            return !fields.includes('');
           }
         },
         watch: {
@@ -97,7 +156,8 @@
           },
         },
       }).mount("#app");
-      
+      const lista = [];
+      lista.shift
     </script>
   </body>
 </html>
