@@ -13,7 +13,7 @@
     <script>  
       const { createApp } = Vue; 
       
-      const vm = createApp({
+      const app = createApp({
         data() {
           return {
             isOpen: false,
@@ -62,36 +62,14 @@
           </section>
           <section class="posts" v-else>
             <h2 class="posts__title">Posts</h2>
-            <article class="post">
-              <div class="post__label">Titulo del post</div>
-              <input 
-                class="post__title"
-                placeholder="Escribe un gran titulo"
-                v-model="titlePost"
-                />
-              <div class="post__label">Contenido</div>
-              <textarea 
-                class="post__description" 
-                rows="4" 
-                cols="42" 
-                placeholder="Cuentanos que pasa por tu mente"
-                v-model="descriptionPost"
-                />
-              <button 
-                class="post__button"
-                @click="addPost">
-                  Agrega post
-                </button>
-            </article>
+            <publish-post />
             <ul class="posts__list"
               >
               <li 
                 v-for="(item, index) in posts" 
                 :key="index"  
                 class="posts__item">
-                  <h4 class="posts__title">{{ item.title }}</h4>
-                  <p class="posts__description">{{ item.description }}</p>
-                  <button @click="deletePost(index)">Borrar post</button>
+                  <post :postData="item" :index="index"/>
               </li>
             </ul>
           </section>
@@ -155,9 +133,57 @@
             }
           },
         },
-      }).mount("#app");
-      const lista = [];
-      lista.shift
+      });
+
+      /* Cuando la app se hace lo suficientemente grande lo mejor es dividirla por partes 
+      a estas partes lo mas comun es llamarlas componentes, antes se hizo enfasis en este termino
+      pues realmente lo que se quiere con este tipo de herramientas es hacer un facil desarrollo pero 
+      tambien modificacion, por lo cual es muy bueno devidir la responsabilidades de ciertas logicas
+      y al final estas se tienen que transmitir.
+      
+      En este caso se utiliza la propiedad llama props la cual recibe datos que el componentes
+      padre quiere comuniarle al componente hijo
+      
+      Para que el componente hijo reciva dichos datos  se le debe especificar con
+      :propiedadHija=propiedadPadre */
+      
+      app.component("publish-post", {
+        template: `
+        <article class="post">
+          <div class="post__label">Titulo del post</div>
+            <input 
+              class="post__title"
+              placeholder="Escribe un gran titulo"
+              v-model="titlePost"
+              />
+            <div class="post__label">Contenido</div>
+            <textarea 
+              class="post__description" 
+              rows="4" 
+              cols="42" 
+              placeholder="Cuentanos que pasa por tu mente"
+              v-model="descriptionPost"
+              />
+            <button 
+              class="post__button"
+              @click="addPost"
+              >
+                Agrega post
+            </button>
+        </article>
+        `
+      });
+
+      app.component("post", {
+        props: ["postData", "index"],
+        template: `
+          <h4 class="posts__title">{{ postData.title }}</h4>
+          <p class="posts__description">{{ postData.description }}</p>
+          <button>Borrar post</button>
+        `,
+      });
+
+      const vm = app.mount("#app")
     </script>
   </body>
 </html>
