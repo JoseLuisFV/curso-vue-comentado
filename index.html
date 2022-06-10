@@ -23,23 +23,28 @@
             posts: [
               {
                 title: "Un titulo chido", 
-                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo",
+                canEdit: false
               },
               {
                 title: "Un titulo chido", 
-                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo",
+                canEdit: true
               },
               {
                 title: "Un titulo chido", 
-                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo",
+                canEdit: false
               },
               {
                 title: "Un titulo chido", 
-                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo",
+                canEdit: false
               },
               {
                 title: "Un titulo chido", 
-                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo"
+                description: "Puro chismecito del bueno, ven a leer en de que habla el mundo",
+                canEdit: true
               },
             ],
             titlePost: '',
@@ -69,7 +74,33 @@
                 v-for="(item, index) in posts" 
                 :key="index"  
                 class="posts__item">
-                  <post :postData="item" :index="index"/>
+                  <post :postData="item" :index="index">
+                    <!--Los componentes son utiles, pero lo interesante es que sean lo
+                      mas reutilizables pero tambien flexibles, en consecuencia deben
+                      poder variar algo en contenido si es que asi se requiere, por ejemplo en el
+                      caso de las publicaciones, normalmente en una red social o en una
+                      plataforma donde los usuarios publican contenido, se puede encontrar
+                      con la situacion de encontrarse con publicaciones que el hizo y que otros
+                      usuarios hicieron.
+                      
+                      Seria de lo mas normal que el usuario pueda editar sus publicaciones o
+                      borrarlas pero  esa funcionalidad no deberia poderse en publicaciones que 
+                      el no realizo, en este ejemplo tenemos que una publicacion se encuentra en 
+                      dos situaciones que si bien tienen cierto parecido, no lo son del todo
+                      para ese tipo de casos estan los slots, que nos permites insertar
+                      contenido personalizado segun sea el caso
+                      
+                      Para ello se utiliza la etiqueta template que debe ser escrita dentro del
+                      componente pero en la ubicacion donde dicho componente se esta utilizando
+                      
+                      Se debe asignar con la directva de v-slot el nombre, el cual ayuda a colocar
+                      ese contenido en el slot correcto dentro del componente
+                      -->
+                    <template v-if="item.canEdit" v-slot:editpost>
+                      <button>Borrar</button>
+                      <button>Editar</button>
+                    </template>
+                  </post>
               </li>
             </ul>
           </section>
@@ -134,18 +165,6 @@
           },
         },
       });
-
-      /* Cuando la app se hace lo suficientemente grande lo mejor es dividirla por partes 
-      a estas partes lo mas comun es llamarlas componentes, antes se hizo enfasis en este termino
-      pues realmente lo que se quiere con este tipo de herramientas es hacer un facil desarrollo pero 
-      tambien modificacion, por lo cual es muy bueno devidir la responsabilidades de ciertas logicas
-      y al final estas se tienen que transmitir.
-      
-      En este caso se utiliza la propiedad llama props la cual recibe datos que el componentes
-      padre quiere comuniarle al componente hijo
-      
-      Para que el componente hijo reciva dichos datos  se le debe especificar con
-      :propiedadHija=propiedadPadre */
       
       app.component("publish-post", {
         template: `
@@ -179,7 +198,11 @@
         template: `
           <h4 class="posts__title">{{ postData.title }}</h4>
           <p class="posts__description">{{ postData.description }}</p>
-          <button>Borrar post</button>
+          <!--
+            Se utiliza la etique slot para ubicar el contenido peronalizado
+            se debe asignar el nombre con el atributo name y debe de escribirse un nombre
+          -->
+          <slot name=editpost></slot>
         `,
       });
 
