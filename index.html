@@ -16,7 +16,7 @@
       const app = createApp({
         data() {
           return {
-            isOpen: false,
+            isOpen: true,
             text: "Abrir sesión",
             userName: '',
             password: '',
@@ -47,10 +47,10 @@
                 canEdit: true
               },
             ],
-            titlePost: '',
-            descriptionPost: '',
             message: '',
             letKnowUser: false,
+            titlePost: '',
+            descriptionPost: '',
           };
         },
         template: `
@@ -67,7 +67,24 @@
           </section>
           <section class="posts" v-else>
             <h2 class="posts__title">Posts</h2>
-            <publish-post />
+            <!--
+                Los props tambien se pueden enviar con v-model, pero eso solo es en el caso
+                de que queramos reactividad de data que es comun en el padre tanto en el hijo.
+                
+                El v-model necesita que se especifique el nombre del prop y el nombre de la propiedad
+                que se encuentra en la data.
+                
+                v-model:propName="dataPropName"
+                -->
+                 <!--
+                Para escuchar un evento personalizado se utiliza v-on o @, por ejemplo el evento que
+                dispara el componente hijo, luego ese evento disparara un metodo o una expresion, tal cual
+                como cualquier otro evento ya nativo de js
+                -->
+            <publish-post 
+              @sendToAdd="addPost" 
+              v-model:title="titlePost"
+              v-model:description="descriptionPost"/>
             <ul class="posts__list"
               >
               <li 
@@ -75,31 +92,10 @@
                 :key="index"  
                 class="posts__item">
                   <post :postData="item" :index="index">
-                    <!--Los componentes son utiles, pero lo interesante es que sean lo
-                      mas reutilizables pero tambien flexibles, en consecuencia deben
-                      poder variar algo en contenido si es que asi se requiere, por ejemplo en el
-                      caso de las publicaciones, normalmente en una red social o en una
-                      plataforma donde los usuarios publican contenido, se puede encontrar
-                      con la situacion de encontrarse con publicaciones que el hizo y que otros
-                      usuarios hicieron.
-                      
-                      Seria de lo mas normal que el usuario pueda editar sus publicaciones o
-                      borrarlas pero  esa funcionalidad no deberia poderse en publicaciones que 
-                      el no realizo, en este ejemplo tenemos que una publicacion se encuentra en 
-                      dos situaciones que si bien tienen cierto parecido, no lo son del todo
-                      para ese tipo de casos estan los slots, que nos permites insertar
-                      contenido personalizado segun sea el caso
-                      
-                      Para ello se utiliza la etiqueta template que debe ser escrita dentro del
-                      componente pero en la ubicacion donde dicho componente se esta utilizando
-                      
-                      Se debe asignar con la directva de v-slot el nombre, el cual ayuda a colocar
-                      ese contenido en el slot correcto dentro del componente
-                      -->
                     <template v-if="item.canEdit" v-slot:editpost>
-                      <button>Borrar</button>
+                      <button @click="deletePost(index)">Borrar</button>
                       <button>Editar</button>
-                    </template>
+</template>
                   </post>
               </li>
             </ul>
@@ -126,15 +122,14 @@
           logOut() {
 
           },
-          addPost() {
-            const fields = [
-              this.titlePost,
-              this.descriptionPost
-            ];
+          addPost(data) {
+            console.log(data);
+            const fields = Object.values(data);
             if (this.checkEmptyFields(fields)) {
               this.posts.unshift({
-                title: this.titlePost,
-                description: this.descriptionPost
+                title: data.title,
+                description: data.description,
+                canEdit: true,
               });
               this.titlePost = '';
               this.descriptionPost = ''
@@ -151,7 +146,7 @@
             this.message = '';
           },
           checkEmptyFields(fields) {
-            return !fields.includes('');
+            return !fields.includes('') && !fields.includes(undefined);
           }
         },
         watch: {
@@ -170,10 +165,17 @@
         template: `
         <article class="post">
           <div class="post__label">Titulo del post</div>
+            <!--
+              En el caso de que la reactividad con los datos del padre, que son dados 
+              por inputs es que necesite utilizar el atributo value con v-bind, y que el evento
+              que detone todo sea el de input, que mandara a ejecutar el metodo que dispara el
+              evento update junto ccon la data
+              -->
             <input 
               class="post__title"
               placeholder="Escribe un gran titulo"
-              v-model="titlePost"
+              :value="title"
+              v-on:input="inputTitle"
               />
             <div class="post__label">Contenido</div>
             <textarea 
@@ -181,16 +183,64 @@
               rows="4" 
               cols="42" 
               placeholder="Cuentanos que pasa por tu mente"
-              v-model="descriptionPost"
+              :value="description"
+              v-on:input="inputDescription"
               />
             <button 
               class="post__button"
-              @click="addPost"
+              @click="create"
               >
                 Agrega post
             </button>
+            <button @click="escribeDefault"></button>
         </article>
-        `
+        `,
+        props: {
+          title: String,
+          description: String,
+        },
+        methods: {
+          /*
+          Para que la viculacion este completa se tiene que emitir la a traves de un evento muy
+          en especifico, donde necesitas escribir la palabra update y la prop que fue designada con 
+          v-model
+          
+          update:propVModel
+
+          Del mismo modo necesitas enviarle la data con la cual el padre actualizara el contenido
+          de su propiedad encontrada en data.
+
+          */
+          inputTitle (e) {
+            this.$emit("update:title", e.target.value);
+          },
+          inputDescription (e) {
+            this.$emit("update:description", e.target.value);
+          },
+          /*
+          El padre le da datos a hijo mediante props, sin embargo el hijo tambien puede entregarle
+          al padre datos o hacerle llegar que ocurrio algo, si ese es el caso quiere decir que '
+          con el motivo de que el padre se encargue del proceso, de tal manera que el hijo solo 
+          se encarga de darle los detalles importates.
+          
+          Para ello utiliza this.$emit, el cual emite un evento, este evento tiene un nombre
+          asignado por nosotros los programadores, tal evento, puede acompañarlo datos que el componente
+          hijo le quiera dar
+          
+          this.$emit("eventoDisparadoPorHijo", datos)
+          '
+          */
+          create () {
+            this.$emit("sendToAdd", {
+              title: this.title,
+              description: this.description,
+            })
+          },
+          escribeDefault () {
+            this.$emit("update:title", "Titulo Chevere");
+            this.$emit("update:description", "Las ultimas palabras de mi adolescencia")
+          }
+        },
       });
 
       app.component("post", {
@@ -198,10 +248,6 @@
         template: `
           <h4 class="posts__title">{{ postData.title }}</h4>
           <p class="posts__description">{{ postData.description }}</p>
-          <!--
-            Se utiliza la etique slot para ubicar el contenido peronalizado
-            se debe asignar el nombre con el atributo name y debe de escribirse un nombre
-          -->
           <slot name=editpost></slot>
         `,
       });
